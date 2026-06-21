@@ -10,228 +10,641 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
 <style>
   :root{
-    --ledger:#0c1226;--ledger-2:#0a0f20;--surface:#131b33;--surface-2:#18223f;
-    --line:#243154;--line-soft:#1b2542;--ink:#e8ecf8;--muted:#8a97b8;--faint:#5a6685;
-    --credit:#4ade9e;--credit-dim:#2f8e68;--signal:#f5b84b;--danger:#ff6b6b;--mesh-1:#5b8cff;--mesh-2:#8b5cf6;
-    --display:'Space Grotesk',system-ui,sans-serif;--body:'Inter',system-ui,sans-serif;--mono:'JetBrains Mono',ui-monospace,monospace;
+    --ledger:#09111f;--ledger-2:#0b1526;--surface:#111d30;--surface-2:#162238;
+    --line:#1e3052;--line-soft:#172540;--ink:#dfe6f5;--muted:#7d8fac;--faint:#47587a;
+    --credit:#34d88e;--credit-dim:#1f7a54;--signal:#e8a730;--danger:#f05252;
+    --mesh-1:#4f83f8;--mesh-2:#7c4ded;
+    --passport-bg:#0e1e35;--passport-border:#2a4470;
+    --display:'Space Grotesk',system-ui,sans-serif;
+    --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+    --rad:14px;
   }
   *{box-sizing:border-box;margin:0;padding:0;}
   html,body{height:100%;}
   body{font-family:var(--body);color:var(--ink);background:var(--ledger);overflow:hidden;}
+
+  /* deck shell */
   .deck{height:100vh;overflow-y:auto;scroll-snap-type:y mandatory;scroll-behavior:smooth;}
-  .deck::-webkit-scrollbar{display:none;} .deck{scrollbar-width:none;}
-  .slide{height:100vh;scroll-snap-align:start;display:flex;flex-direction:column;justify-content:center;
-    padding:7vh 8vw;position:relative;
-    background:radial-gradient(1100px 640px at 80% -10%,rgba(91,140,255,.13),transparent 60%),radial-gradient(820px 560px at 6% 10%,rgba(139,92,246,.10),transparent 55%),var(--ledger);}
-  .eyebrow{font-family:var(--mono);font-size:13px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted);margin-bottom:20px;}
-  .grad{background:linear-gradient(100deg,var(--mesh-1),var(--mesh-2) 55%,var(--credit));-webkit-background-clip:text;background-clip:text;color:transparent;}
-  h1{font-family:var(--display);font-weight:700;letter-spacing:-.03em;line-height:1.0;font-size:clamp(40px,7vw,92px);}
-  h2{font-family:var(--display);font-weight:700;letter-spacing:-.02em;line-height:1.04;font-size:clamp(30px,5vw,60px);}
-  .big{font-size:clamp(26px,3.6vw,46px);font-family:var(--display);font-weight:600;line-height:1.15;letter-spacing:-.02em;}
-  p.sub{color:var(--muted);font-size:clamp(17px,2vw,24px);line-height:1.5;margin-top:24px;max-width:24em;}
-  .mono{font-family:var(--mono);} .credit{color:var(--credit);} .blue{color:var(--mesh-1);} .violet{color:var(--mesh-2);} .signal{color:var(--signal);} .danger{color:var(--danger);} .ink{color:var(--ink);}
-  .kick{position:absolute;bottom:5vh;left:8vw;font-family:var(--mono);font-size:13px;color:var(--faint);}
-  .brand{display:flex;align-items:center;gap:12px;font-family:var(--display);font-weight:700;font-size:22px;}
-  .brand .dot{width:14px;height:14px;border-radius:50%;background:radial-gradient(circle at 30% 30%,var(--credit),var(--credit-dim));box-shadow:0 0 16px rgba(74,222,158,.6);}
-  .cols{display:grid;grid-template-columns:1fr 1fr;gap:30px;margin-top:34px;}
-  .card{border:1px solid var(--line);border-radius:14px;padding:22px;background:var(--surface);}
-  .card h3{font-family:var(--display);font-size:clamp(18px,2vw,24px);font-weight:600;margin-bottom:8px;} .card p{color:var(--muted);font-size:clamp(13px,1.3vw,16px);line-height:1.5;}
-  .card.bad{border-color:rgba(255,107,107,.35);} .card.good{border-color:rgba(74,222,158,.4);background:radial-gradient(130% 150% at 100% 0%,rgba(74,222,158,.08),transparent 60%),var(--surface);}
-  .tag{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;}
-  ul.lst{margin-top:26px;list-style:none;display:flex;flex-direction:column;gap:16px;max-width:30em;}
-  ul.lst li{font-size:clamp(16px,1.9vw,23px);color:var(--ink);padding-left:30px;position:relative;line-height:1.4;}
-  ul.lst li::before{content:'▸';position:absolute;left:0;color:var(--credit);}
-  ul.lst li small{display:block;color:var(--muted);font-size:.72em;margin-top:3px;}
-  .row{display:flex;gap:40px;flex-wrap:wrap;margin-top:36px;}
-  .stat .v{font-family:var(--display);font-weight:700;font-size:clamp(28px,3.6vw,46px);} .stat .l{font-family:var(--mono);font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-top:4px;}
-  /* corridor */
-  .corr{display:flex;align-items:center;margin-top:40px;flex-wrap:wrap;gap:6px;}
-  .stn{flex:1;min-width:130px;text-align:center;padding:16px 8px;border:1px solid var(--line);border-radius:12px;background:var(--surface-2);}
-  .stn.hl{border-color:var(--credit);box-shadow:0 0 0 1px rgba(74,222,158,.3);}
-  .stn .f{font-size:28px;} .stn .nm{font-family:var(--display);font-weight:600;font-size:13px;margin-top:8px;} .stn .sb{font-family:var(--mono);font-size:10px;color:var(--faint);margin-top:3px;}
-  .arr{color:var(--credit);font-size:14px;}
-  /* moat */
-  .moat{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:36px;}
-  .moat .m{border:1px solid var(--line);border-radius:16px;padding:30px;background:var(--surface);}
-  .moat .m.win{border-color:rgba(74,222,158,.5);background:radial-gradient(130% 160% at 0% 0%,rgba(74,222,158,.12),transparent 60%),var(--surface);}
-  .moat .code{font-family:var(--mono);font-size:clamp(18px,2.4vw,30px);font-weight:700;margin-top:14px;}
-  /* ladder */
-  .ladder{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:36px;max-width:900px;}
-  .rung{border:1px solid var(--line);border-top-width:3px;border-radius:12px;padding:16px 12px;background:var(--surface);}
-  .rung .rs{font-family:var(--mono);font-size:12px;color:var(--muted);} .rung .rn{font-family:var(--display);font-weight:700;font-size:18px;margin-top:8px;} .rung .rl{font-family:var(--display);font-weight:600;font-size:24px;margin-top:8px;}
-  /* quote */
-  .quote{margin-top:30px;border:1px solid var(--line);border-left:3px solid var(--mesh-2);border-radius:0 14px 14px 0;padding:24px 28px;background:var(--surface-2);max-width:34em;}
-  .quote .q{font-size:clamp(16px,1.9vw,22px);line-height:1.5;color:var(--ink);font-style:italic;} .quote .a{font-family:var(--mono);font-size:13px;color:var(--credit);margin-top:14px;}
-  /* feature pills */
-  .pills{display:flex;flex-wrap:wrap;gap:12px;margin-top:34px;max-width:40em;}
-  .pillf{font-family:var(--mono);font-size:clamp(12px,1.3vw,15px);border:1px solid var(--line);border-radius:999px;padding:9px 16px;color:var(--ink);background:var(--surface);}
+  .deck::-webkit-scrollbar{display:none;}
+  .deck{scrollbar-width:none;}
+
+  /* slide base */
+  .slide{
+    height:100vh;scroll-snap-align:start;
+    display:flex;flex-direction:column;justify-content:center;
+    padding:7vh 8vw;position:relative;overflow:hidden;
+  }
+  .slide::before{
+    content:'';position:absolute;inset:0;
+    background:
+      radial-gradient(900px 600px at 92% -8%,rgba(79,131,248,.10),transparent 55%),
+      radial-gradient(700px 500px at 0% 110%,rgba(124,77,237,.08),transparent 55%);
+    pointer-events:none;
+  }
+
+  /* type scale */
+  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.26em;text-transform:uppercase;color:var(--muted);margin-bottom:18px;}
+  .grad{background:linear-gradient(100deg,var(--mesh-1) 10%,var(--mesh-2) 54%,var(--credit) 100%);-webkit-background-clip:text;background-clip:text;color:transparent;}
+  h1{font-family:var(--display);font-weight:700;letter-spacing:-.03em;line-height:1.0;font-size:clamp(36px,6.4vw,84px);}
+  h2{font-family:var(--display);font-weight:700;letter-spacing:-.025em;line-height:1.06;font-size:clamp(28px,4.4vw,56px);}
+  .big{font-size:clamp(22px,3vw,38px);font-family:var(--display);font-weight:600;line-height:1.2;letter-spacing:-.02em;}
+  p.sub{color:var(--muted);font-size:clamp(15px,1.7vw,20px);line-height:1.55;margin-top:20px;max-width:26em;}
+  .mono{font-family:var(--mono);}
+  .credit{color:var(--credit);}
+  .blue{color:var(--mesh-1);}
+  .violet{color:var(--mesh-2);}
+  .signal{color:var(--signal);}
+  .danger{color:var(--danger);}
+  .ink{color:var(--ink);}
+  .faint{color:var(--faint);}
+  .kick{position:absolute;bottom:5vh;left:8vw;font-family:var(--mono);font-size:12px;color:var(--faint);}
+
+  /* brand */
+  .brand{display:flex;align-items:center;gap:10px;font-family:var(--display);font-weight:700;font-size:21px;}
+  .brand .dot{
+    width:13px;height:13px;border-radius:50%;flex-shrink:0;
+    background:radial-gradient(circle at 32% 32%,var(--credit),var(--credit-dim));
+    box-shadow:0 0 14px rgba(52,216,142,.55);
+  }
+
+  /* ── SLIDE 1: passport hero ── */
+  .passport{
+    width:min(420px,92vw);
+    border:1px solid var(--passport-border);
+    border-radius:16px;
+    background:var(--passport-bg);
+    padding:24px;
+    margin-top:28px;
+    position:relative;
+  }
+  .passport::after{
+    content:'';
+    position:absolute;inset:-1px;border-radius:17px;
+    background:linear-gradient(135deg,rgba(79,131,248,.25),rgba(52,216,142,.12),transparent 60%);
+    pointer-events:none;z-index:0;
+  }
+  .passport>*{position:relative;z-index:1;}
+  .pp-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
+  .pp-badge{
+    font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+    border:1px solid rgba(52,216,142,.45);border-radius:6px;
+    padding:5px 10px;color:var(--credit);background:rgba(52,216,142,.06);
+  }
+  .pp-tier{font-family:var(--display);font-weight:700;font-size:22px;color:var(--signal);}
+  .pp-id{font-family:var(--mono);font-size:11px;color:var(--muted);margin-bottom:14px;word-break:break-all;}
+  .pp-dims{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+  .pp-dim{
+    border:1px solid var(--line);border-radius:10px;padding:10px 12px;
+    background:var(--surface);
+  }
+  .pp-dim .label{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin-bottom:5px;}
+  .pp-dim .val{font-family:var(--display);font-weight:600;font-size:13px;color:var(--ink);}
+  .pp-dim .issuer{font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:2px;}
+  .pp-dim.ok .val{color:var(--credit);}
+  .pp-footer{margin-top:14px;padding-top:12px;border-top:1px solid var(--line-soft);display:flex;justify-content:space-between;align-items:center;}
+  .pp-conf{font-family:var(--mono);font-size:11px;color:var(--muted);}
+  .pp-conf b{color:var(--ink);}
+  .pp-chain{font-family:var(--mono);font-size:10px;color:var(--faint);}
+
+  /* ── SLIDE 2: problem ── */
+  .problem-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:32px;}
+  .pain{
+    border:1px solid rgba(240,82,82,.28);border-radius:var(--rad);
+    padding:20px;background:radial-gradient(130% 160% at 0% 0%,rgba(240,82,82,.06),transparent 60%),var(--surface);
+  }
+  .pain .ph{font-family:var(--display);font-weight:600;font-size:clamp(15px,1.6vw,19px);margin-bottom:8px;}
+  .pain .pd{color:var(--muted);font-size:clamp(13px,1.2vw,15px);line-height:1.5;}
+
+  /* ── SLIDE 3: 6 dimensions ── */
+  .dims{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:28px;}
+  .dim-card{
+    border:1px solid var(--line);border-radius:var(--rad);padding:18px 16px;
+    background:var(--surface);
+  }
+  .dim-card .dn{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin-bottom:8px;}
+  .dim-card .dt{font-family:var(--display);font-weight:600;font-size:clamp(14px,1.4vw,16px);color:var(--ink);margin-bottom:4px;}
+  .dim-card .di{font-family:var(--mono);font-size:11px;color:var(--credit);}
+  .dim-card .dd{color:var(--muted);font-size:12px;margin-top:6px;line-height:1.4;}
+
+  /* ── SLIDE 4: tier + flywheel ── */
+  .tier-row{display:flex;gap:10px;margin-top:26px;flex-wrap:wrap;}
+  .rung{
+    flex:1;min-width:100px;
+    border:1px solid var(--line);border-top:3px solid var(--line);
+    border-radius:var(--rad);padding:16px 12px;background:var(--surface);
+  }
+  .rung .rs{font-family:var(--mono);font-size:10px;color:var(--muted);}
+  .rung .rn{font-family:var(--display);font-weight:700;font-size:16px;margin-top:8px;}
+  .rung .rl{font-family:var(--display);font-weight:600;font-size:22px;margin-top:6px;}
+  .flywheel{
+    margin-top:24px;
+    border:1px solid var(--line);border-radius:var(--rad);padding:20px 24px;
+    background:var(--surface);max-width:46em;
+  }
+  .fw-title{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;}
+  .fw-steps{display:flex;gap:0;align-items:center;flex-wrap:wrap;}
+  .fw-step{font-family:var(--display);font-weight:600;font-size:clamp(12px,1.2vw,14px);color:var(--ink);}
+  .fw-arr{color:var(--credit);margin:0 8px;font-size:12px;}
+
+  /* ── SLIDE 5: architecture ── */
+  .arch-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:28px;}
+  .arch-col h4{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:14px;}
+  .pills{display:flex;flex-wrap:wrap;gap:9px;}
+  .pillf{
+    font-family:var(--mono);font-size:clamp(11px,1.1vw,13px);
+    border:1px solid var(--line);border-radius:999px;
+    padding:7px 14px;color:var(--ink);background:var(--surface);
+  }
   .pillf b{color:var(--credit);}
-  /* tx + shot */
-  .txwrap{display:grid;grid-template-columns:1.1fr .9fr;gap:28px;margin-top:30px;align-items:start;}
-  .txl{border:1px solid var(--line);border-radius:14px;overflow:hidden;}
-  .txl a{display:flex;justify-content:space-between;gap:12px;padding:11px 16px;border-bottom:1px solid var(--line-soft);text-decoration:none;font-size:clamp(12px,1.2vw,14px);} .txl a:last-child{border-bottom:0;}
-  .txl .k{font-family:var(--mono);color:var(--credit);} .txl a.deny .k{color:var(--danger);} .txl .h{font-family:var(--mono);color:var(--mesh-1);}
-  .shot{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--surface);} .shot img{width:100%;display:block;}
-  /* nav chrome */
+  .pillf.hi{border-color:rgba(52,216,142,.4);background:rgba(52,216,142,.05);}
+  .arch-note{margin-top:20px;font-family:var(--mono);font-size:12px;color:var(--muted);max-width:36em;line-height:1.5;}
+  .arch-note span{color:var(--signal);}
+
+  /* ── SLIDE 6: demo arc ── */
+  .demo-steps{display:flex;flex-direction:column;gap:10px;margin-top:24px;max-width:42em;}
+  .demo-step{
+    display:flex;align-items:flex-start;gap:14px;
+    border:1px solid var(--line);border-radius:var(--rad);
+    padding:13px 16px;background:var(--surface);
+  }
+  .demo-step .step-num{
+    font-family:var(--mono);font-size:11px;
+    border:1px solid var(--line);border-radius:6px;
+    padding:3px 7px;color:var(--faint);flex-shrink:0;
+  }
+  .demo-step .step-body .st{font-family:var(--display);font-weight:600;font-size:clamp(13px,1.3vw,15px);color:var(--ink);}
+  .demo-step .step-body .sd{font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:3px;}
+  .demo-step.deny{border-color:rgba(240,82,82,.3);}
+  .demo-step.deny .step-num{border-color:rgba(240,82,82,.35);color:var(--danger);}
+  .demo-step.deny .step-body .st{color:var(--danger);}
+  .demo-step.ok{border-color:rgba(52,216,142,.25);}
+  .demo-step.ok .step-num{border-color:rgba(52,216,142,.4);color:var(--credit);}
+
+  /* ── SLIDE 7: txns ── */
+  .txwrap{display:grid;grid-template-columns:1.15fr .85fr;gap:24px;margin-top:26px;align-items:start;}
+  .txl{border:1px solid var(--line);border-radius:var(--rad);overflow:hidden;}
+  .txl a{
+    display:flex;justify-content:space-between;gap:12px;align-items:center;
+    padding:10px 16px;border-bottom:1px solid var(--line-soft);
+    text-decoration:none;font-size:clamp(11px,1.1vw,13px);
+    transition:background .15s;
+  }
+  .txl a:last-child{border-bottom:0;}
+  .txl a:hover{background:var(--surface-2);}
+  .txl a:focus-visible{outline:2px solid var(--mesh-1);outline-offset:-2px;}
+  .txl .k{font-family:var(--mono);color:var(--credit);}
+  .txl .h{font-family:var(--mono);color:var(--mesh-1);font-size:10px;}
+  .txl a.deny .k{color:var(--danger);}
+  .txl a.warn .k{color:var(--signal);}
+  .tx-note{
+    border:1px solid var(--line);border-radius:var(--rad);padding:20px;
+    background:var(--surface);font-family:var(--mono);font-size:12px;
+    color:var(--muted);line-height:1.6;
+  }
+  .tx-note b{color:var(--ink);}
+
+  /* ── SLIDE 8: business model ── */
+  .biz-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:28px;}
+  .biz-card{border:1px solid var(--line);border-radius:var(--rad);padding:20px;background:var(--surface);}
+  .biz-card .bc-tag{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;}
+  .biz-card h3{font-family:var(--display);font-weight:600;font-size:clamp(15px,1.5vw,18px);margin-bottom:8px;}
+  .biz-card p{color:var(--muted);font-size:clamp(12px,1.2vw,14px);line-height:1.5;}
+  .biz-card.win{border-color:rgba(52,216,142,.35);background:radial-gradient(140% 160% at 0% 0%,rgba(52,216,142,.07),transparent 55%),var(--surface);}
+  .gtm{margin-top:20px;max-width:36em;}
+  .gtm-row{display:flex;gap:10px;align-items:baseline;font-size:clamp(13px,1.3vw,15px);padding:6px 0;border-bottom:1px solid var(--line-soft);}
+  .gtm-row:last-child{border-bottom:0;}
+  .gtm-row .gl{font-family:var(--mono);font-size:11px;color:var(--muted);width:80px;flex-shrink:0;}
+  .gtm-row .gv{color:var(--ink);}
+
+  /* ── SLIDE 9: honesty / roadmap ── */
+  .honest-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:28px;}
+  .honest-card{border:1px solid var(--line);border-radius:var(--rad);padding:20px;background:var(--surface);}
+  .honest-card.now{border-color:rgba(79,131,248,.3);}
+  .honest-card.later{border-color:rgba(124,77,237,.3);}
+  .honest-card .hc-tag{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;}
+  .honest-card ul{list-style:none;display:flex;flex-direction:column;gap:8px;}
+  .honest-card ul li{font-size:clamp(13px,1.3vw,15px);color:var(--ink);padding-left:22px;position:relative;line-height:1.4;}
+  .honest-card ul li::before{content:'·';position:absolute;left:6px;color:var(--muted);}
+  .honest-card ul li small{display:block;color:var(--muted);font-size:.8em;margin-top:2px;font-family:var(--mono);}
+  .honest-card.now ul li::before{color:var(--mesh-1);}
+  .honest-card.later ul li::before{color:var(--credit);}
+
+  /* ── SLIDE 10: close ── */
+  .ask-row{display:flex;gap:28px;flex-wrap:wrap;margin-top:36px;}
+  .ask-card{
+    border:1px solid var(--line);border-radius:var(--rad);padding:22px 26px;
+    background:var(--surface);flex:1;min-width:200px;
+  }
+  .ask-card .ak{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+  .ask-card .av{font-family:var(--display);font-weight:600;font-size:clamp(16px,1.6vw,20px);color:var(--ink);}
+  .ask-card .al{color:var(--muted);font-size:13px;margin-top:4px;}
+
+  /* ── nav chrome ── */
   .progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--mesh-1),var(--credit));z-index:50;transition:width .25s;}
-  .dots{position:fixed;right:22px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:10px;z-index:50;}
-  .dots b{width:9px;height:9px;border-radius:50%;background:var(--line);border:0;cursor:pointer;padding:0;transition:background .2s,transform .2s;}
-  .dots b.on{background:var(--credit);transform:scale(1.3);}
-  .pageno{position:fixed;bottom:18px;right:24px;font-family:var(--mono);font-size:12px;color:var(--faint);z-index:50;}
-  .hint{position:fixed;bottom:18px;left:24px;font-family:var(--mono);font-size:12px;color:var(--faint);z-index:50;}
-  @media(max-width:820px){.cols,.moat,.txwrap{grid-template-columns:1fr;} .ladder{grid-template-columns:1fr 1fr;} .dots{display:none;}}
-  @media(prefers-reduced-motion:reduce){.deck{scroll-behavior:auto;}}
+  .dots{position:fixed;right:20px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:10px;z-index:50;}
+  .dots b{width:8px;height:8px;border-radius:50%;background:var(--line);border:0;cursor:pointer;padding:0;transition:background .2s,transform .2s;}
+  .dots b.on{background:var(--credit);transform:scale(1.35);}
+  .dots b:focus-visible{outline:2px solid var(--mesh-1);outline-offset:3px;border-radius:50%;}
+  .pageno{position:fixed;bottom:16px;right:22px;font-family:var(--mono);font-size:11px;color:var(--faint);z-index:50;}
+  .hint{position:fixed;bottom:16px;left:22px;font-family:var(--mono);font-size:11px;color:var(--faint);z-index:50;}
+
+  /* responsive */
+  @media(max-width:820px){
+    .problem-grid,.dims,.arch-grid,.txwrap,.biz-grid,.honest-grid{grid-template-columns:1fr;}
+    .dims{grid-template-columns:1fr 1fr;}
+    .tier-row .rung{min-width:80px;}
+    .dots{display:none;}
+    .slide{padding:6vh 6vw;}
+  }
+  @media(max-width:540px){
+    .dims{grid-template-columns:1fr;}
+    .tier-row{flex-direction:column;}
+    .fw-steps{flex-direction:column;gap:4px;}
+    .fw-arr{transform:rotate(90deg);margin:2px 0;}
+  }
+  @media(prefers-reduced-motion:reduce){
+    .deck{scroll-behavior:auto;}
+    *{transition:none!important;}
+  }
 </style>
 </head>
 <body>
 <div class="progress" id="prog"></div>
 <div class="dots" id="dots"></div>
-<div class="pageno" id="pageno">01</div>
+<div class="pageno" id="pageno">01 / 10</div>
 <div class="hint">→ / space to advance</div>
 
 <div class="deck" id="deck">
 
-  <!-- 1 TITLE -->
+  <!-- ── 1 PROBLEM ── -->
   <section class="slide">
+    <div class="eyebrow">SwissHacks 2026 · Ripple · Know Your Agent</div>
     <div class="brand"><span class="dot"></span>MeshCredit</div>
-    <h1 style="margin-top:24px">The trust bureau for<br><span class="grad">AI agent payments.</span></h1>
-    <p class="sub">On-ledger KYA / KYB credentials, enforced at consensus on the XRP Ledger. The product is the credential; cross-border agent payments are use case #1.</p>
-    <div class="kick">SwissHacks 2026 · Ripple challenge — Know Your Agent</div>
-  </section>
-
-  <!-- 2 PROBLEM -->
-  <section class="slide">
-    <div class="eyebrow">The problem</div>
-    <h2>When an agent moves money,<br>the bank can't tell if it's <span class="danger">trustworthy.</span></h2>
-    <p class="sub">So every cross-border transfer lands in the manual review queue. Agent autonomy dies at the compliance wall — and there's no portable, verifiable way to vouch for a machine.</p>
-    <div class="kick">Trust is the binding constraint on agent payments.</div>
-  </section>
-
-  <!-- 3 INSIGHT -->
-  <section class="slide">
-    <div class="eyebrow">The insight</div>
-    <h2>Don't store trust in a database.<br><span class="grad">Enforce it at consensus.</span></h2>
-    <div class="cols">
-      <div class="card bad"><div class="tag">Everyone else</div><h3>A layer up</h3><p>Trust is a row in a vendor DB, checked by an API the relying party must trust, enforced in application code above the money. Skippable by any buggy or malicious integrator.</p></div>
-      <div class="card good"><div class="tag">MeshCredit</div><h3>In the ledger</h3><p>The credential and the payment gate are the <b class="ink">same primitive</b>. The validators reject an uncertified payment. The rule cannot be skipped.</p></div>
+    <h1 style="margin-top:18px">When an agent moves money,<br>who vouches for it?</h1>
+    <div class="problem-grid" style="max-width:52em;">
+      <div class="pain">
+        <div class="ph danger">No portable agent identity</div>
+        <div class="pd">AI agents have no standardised credential a bank or protocol can verify. Every integrator reinvents a local check — or skips it.</div>
+      </div>
+      <div class="pain">
+        <div class="ph danger">Trust stored, not enforced</div>
+        <div class="pd">Today's solutions are rows in vendor databases, checked by APIs that sit above the money rails and can be bypassed by a buggy or malicious integrator.</div>
+      </div>
+      <div class="pain">
+        <div class="ph danger">Accountability is unlinked</div>
+        <div class="pd">When an agent misbehaves, there is no on-ledger trail to the organisation that deployed it. No traceable principal, no recourse, no kill-switch.</div>
+      </div>
+      <div class="pain">
+        <div class="ph danger">No data flywheel for trust</div>
+        <div class="pd">Agent behaviour never aggregates into a portable reputation. Each payment is a fresh cold-start — even for an agent with a clean two-year history.</div>
+      </div>
     </div>
+    <div class="kick">Trust is the binding constraint on autonomous agent payments.</div>
   </section>
 
-  <!-- 4 PRODUCT -->
+  <!-- ── 2 SOLUTION ── -->
   <section class="slide">
     <div class="eyebrow">The product</div>
-    <h2>The on-ledger <span class="grad">trust passport.</span></h2>
-    <p class="sub">An XLS-70 credential carrying the agent's tier, max single payment, content-attestation hashes and DID — readable by any bank, PSP or venue straight from the ledger, no API key.</p>
-    <div class="row">
-      <div class="stat"><div class="v credit">agent_trust_v1</div><div class="l">Know Your Agent</div></div>
-      <div class="stat"><div class="v blue">operator_v1</div><div class="l">Know Your Business</div></div>
-      <div class="stat"><div class="v violet">agent_skill_v1</div><div class="l">skills economy</div></div>
+    <h2>The on-ledger, multi-dimensional<br><span class="grad">agent passport.</span></h2>
+    <p class="sub">An XLS-70 credential on XRPL — not a database row, not an API claim — a first-class ledger object any relying party can read without trusting us.</p>
+
+    <!-- passport card — the signature hero element -->
+    <div class="passport">
+      <div class="pp-header">
+        <span class="pp-badge">agent_cert_v2</span>
+        <span class="pp-tier">BRONZE <span class="mono faint" style="font-size:14px">/ low-conf</span></span>
+      </div>
+      <div class="pp-id">did:xrpl:testnet:rAi3…k7Qz · subject key counter-signed by principal</div>
+      <div class="pp-dims">
+        <div class="pp-dim ok"><div class="label">D1 · Principal / KYB</div><div class="val">Novartis AG</div><div class="issuer">Zefix CHE-103.867.266</div></div>
+        <div class="pp-dim ok"><div class="label">D2 · Human accountability</div><div class="val">Verified</div><div class="issuer">World ID IDKit v4</div></div>
+        <div class="pp-dim ok"><div class="label">D3 · Code provenance</div><div class="val">SHA-256 ✓</div><div class="issuer">recomputable by anyone</div></div>
+        <div class="pp-dim ok"><div class="label">D4 · Behavioral record</div><div class="val">0 settlements</div><div class="issuer">public XRPL history</div></div>
+        <div class="pp-dim ok"><div class="label">D5 · Capability scope</div><div class="val">mandate signed</div><div class="issuer">principal-signed</div></div>
+        <div class="pp-dim ok"><div class="label">D6 · AML / OFAC</div><div class="val">CLEAR</div><div class="issuer">19,794-entry SDN screen</div></div>
+      </div>
+      <div class="pp-footer">
+        <span class="pp-conf">Ceiling: <b>$100</b> · Confidence: <b>low</b> · Settlements: <b>0</b></span>
+        <span class="pp-chain">XRPL testnet</span>
+      </div>
     </div>
+    <div class="kick">The product is the certificate. Cross-border agent payments are use-case #1.</div>
   </section>
 
-  <!-- 5 FLOW -->
+  <!-- ── 3 SIX DIMENSIONS ── -->
   <section class="slide">
-    <div class="eyebrow">Use case #1 · cross-border payment</div>
-    <h2>A Swiss agent pays a supplier in Lagos.</h2>
-    <div class="corr">
-      <div class="stn"><div class="f">🇨🇭</div><div class="nm">Helvetia AG</div><div class="sb">operator · KYB</div></div><span class="arr">▸</span>
-      <div class="stn hl"><div class="f">🤖</div><div class="nm">Aria</div><div class="sb">agent · KYA</div></div><span class="arr">▸</span>
-      <div class="stn"><div class="f">◇</div><div class="nm">MeshCredit</div><div class="sb">bureau</div></div><span class="arr">▸</span>
-      <div class="stn"><div class="f">🏦</div><div class="nm">Bank</div><div class="sb">gates account</div></div><span class="arr">▸</span>
-      <div class="stn"><div class="f">🇳🇬</div><div class="nm">Lagos Parts</div><div class="sb">payee</div></div>
+    <div class="eyebrow">Under the passport</div>
+    <h2>Six dimensions. Each has a <span class="grad">named issuer</span><br>and independently checkable evidence.</h2>
+    <div class="dims">
+      <div class="dim-card">
+        <div class="dn">D1 · Principal / KYB</div>
+        <div class="dt">Organisation accountability</div>
+        <div class="di">Zefix (Swiss registry)</div>
+        <div class="dd">Demo: Novartis AG, UID CHE-103.867.266. Cached real public-registry fixture. Anti-impersonation: claim valid only if principal counter-signs agent key.</div>
+      </div>
+      <div class="dim-card">
+        <div class="dn">D2 · Human accountability</div>
+        <div class="dt">Flesh-and-blood link</div>
+        <div class="di">World ID IDKit v4</div>
+        <div class="dd">Orb-verified human behind the deployment. Testable via simulator in demo.</div>
+      </div>
+      <div class="dim-card">
+        <div class="dn">D3 · Code &amp; runtime provenance</div>
+        <div class="dt">Code-swap detection</div>
+        <div class="di">SHA-256 (self-verifiable)</div>
+        <div class="dd">Recomputable hash of agent harness + skill. Anyone can recompute. A patched binary fails the check before the credential is re-issued.</div>
+      </div>
+      <div class="dim-card">
+        <div class="dn">D4 · Behavioral record</div>
+        <div class="dt">On-chain settlement history</div>
+        <div class="di">Public XRPL ledger</div>
+        <div class="dd">Re-derivable from third-party on-chain data. No MeshCredit trust required — an auditor derives the same score independently.</div>
+      </div>
+      <div class="dim-card">
+        <div class="dn">D5 · Capability &amp; scope</div>
+        <div class="dt">Signed spending mandate</div>
+        <div class="di">Principal-signed</div>
+        <div class="dd">Effective ceiling = min(tier ceiling, principal's remaining delegation budget). Delegation chain is on-ledger.</div>
+      </div>
+      <div class="dim-card">
+        <div class="dn">D6 · Compliance / AML</div>
+        <div class="dt">Hard gate — OFAC SDN screen</div>
+        <div class="di">US Treasury SDN list</div>
+        <div class="dd">Full 19,794-entry list. A match is AML-DENY — payment blocked at payment-assessment time. DeepSeek call #5 reasons about the AML hold. Hard gate: fires during every payment attempt, not only at cert issuance.</div>
+      </div>
     </div>
-    <p class="sub" style="max-width:46em">KYB → KYA → the bank's gate → the agent reasons → FX on the DEX → escrow held at the bank → certified release. Every step is a real testnet transaction.</p>
+    <div class="kick">Principal model: Organization→KYB, Individual→KYC, Parent-agent→delegation, Pseudonymous→capped at lowest tier.</div>
   </section>
 
-  <!-- 6 MOAT -->
+  <!-- ── 4 TIER + FLYWHEEL ── -->
   <section class="slide">
-    <div class="eyebrow">The moat</div>
-    <h2>Same transaction. <span class="credit">Opposite outcome.</span></h2>
-    <div class="moat">
-      <div class="m win"><div class="tag">Certified agent</div><div class="big">EscrowFinish</div><div class="code credit">→ tesSUCCESS</div><p class="sub" style="margin-top:14px">Settles to Lagos, straight through.</p></div>
-      <div class="m"><div class="tag">Uncertified agent</div><div class="big">EscrowFinish</div><div class="code danger">→ tecNO_PERMISSION</div><p class="sub" style="margin-top:14px">Denied by the validators, before the bank's queue.</p></div>
+    <div class="eyebrow">Business model engine</div>
+    <h2>Deterministic tier + a first-class <span class="grad">confidence level</span><br>— the data flywheel.</h2>
+    <div class="tier-row">
+      <div class="rung" style="border-top-color:var(--danger);opacity:.6">
+        <div class="rs">score &lt; 30</div>
+        <div class="rn" style="color:var(--danger)">DENIED</div>
+        <div class="rl faint">—</div>
+      </div>
+      <div class="rung" style="border-top-color:var(--signal)">
+        <div class="rs">30–49</div>
+        <div class="rn signal">BRONZE</div>
+        <div class="rl">$100</div>
+      </div>
+      <div class="rung" style="border-top-color:var(--mesh-1)">
+        <div class="rs">50–69</div>
+        <div class="rn blue">SILVER</div>
+        <div class="rl">$500</div>
+      </div>
+      <div class="rung" style="border-top-color:var(--mesh-2)">
+        <div class="rs">70–84</div>
+        <div class="rn violet">GOLD</div>
+        <div class="rl">$2 k</div>
+      </div>
+      <div class="rung" style="border-top-color:var(--credit)">
+        <div class="rs">85–100</div>
+        <div class="rn credit">PLATINUM</div>
+        <div class="rl">$10 k</div>
+      </div>
     </div>
-    <div class="kick">Rivals enforce a layer up. We enforce in the ledger — the moat a database can't copy.</div>
+
+    <div class="flywheel">
+      <div class="fw-title">The data flywheel</div>
+      <div class="fw-steps">
+        <span class="fw-step">New agent: <span class="signal">Bronze, low-conf, 0 settlements</span></span>
+        <span class="fw-arr">▸</span>
+        <span class="fw-step">On-chain history accrues</span>
+        <span class="fw-arr">▸</span>
+        <span class="fw-step"><span class="credit">Gold, high-conf, 847 settlements</span></span>
+        <span class="fw-arr">▸</span>
+        <span class="fw-step">Empirically calibrated thresholds</span>
+        <span class="fw-arr">▸</span>
+        <span class="fw-step">Graph-scale fraud detection</span>
+        <span class="fw-arr">↺</span>
+      </div>
+    </div>
+    <p class="sub" style="max-width:46em">Auditable because behavioral record = public XRPL. Effective spend ceiling = min(tier ceiling, principal remaining delegation budget). Industry analog: FICO / Experian + Chainalysis consortium.</p>
+    <div class="kick">More on-chain data → better calibration → network effect a private DB can't replicate.</div>
   </section>
 
-  <!-- 7 KYA -->
+  <!-- ── 5 ARCHITECTURE ── -->
   <section class="slide">
-    <div class="eyebrow">Know Your Agent</div>
-    <h2>A transparent 100-point score → <span class="grad">tier → ceiling.</span></h2>
-    <div class="ladder">
-      <div class="rung" style="border-top-color:var(--faint);opacity:.6"><div class="rs">0–29</div><div class="rn" style="color:var(--faint)">DENIED</div><div class="rl">—</div></div>
-      <div class="rung" style="border-top-color:var(--signal)"><div class="rs">30–49</div><div class="rn signal">TIER-1</div><div class="rl">$25</div></div>
-      <div class="rung" style="border-top-color:var(--mesh-1)"><div class="rs">50–69</div><div class="rn blue">TIER-2</div><div class="rl">$100</div></div>
-      <div class="rung" style="border-top-color:var(--mesh-2)"><div class="rs">70–84</div><div class="rn violet">TIER-3</div><div class="rl">$500</div></div>
-      <div class="rung" style="border-top-color:var(--credit)"><div class="rs">85–100</div><div class="rn credit">TIER-4</div><div class="rl">$2000</div></div>
+    <div class="eyebrow">Technical foundation</div>
+    <h2>Only live XRPL primitives —<br><span class="grad">nothing custom, nothing unshipped.</span></h2>
+    <div class="arch-grid">
+      <div class="arch-col">
+        <h4>XRPL features used</h4>
+        <div class="pills">
+          <span class="pillf hi"><b>XLS-70</b> Credentials</span>
+          <span class="pillf hi"><b>XLS-80</b> Permissioned Domains</span>
+          <span class="pillf hi"><b>XLS-85</b> TokenEscrow</span>
+          <span class="pillf"><b>DepositAuth</b> / DepositPreauth</span>
+          <span class="pillf"><b>DEX</b> cross-currency path payments</span>
+          <span class="pillf"><b>did:xrpl</b> — on-ledger DID</span>
+          <span class="pillf"><b>RLUSD</b> settlement currency</span>
+          <span class="pillf"><b>x402-lite</b> compliance gate</span>
+        </div>
+      </div>
+      <div class="arch-col">
+        <h4>Enforcement model</h4>
+        <div class="pills">
+          <span class="pillf">Credential existence gated at <b>consensus</b></span>
+          <span class="pillf">DepositPreauth + <b>XLS-80 Domains</b> = payment gate</span>
+          <span class="pillf">Uncertified EscrowFinish → <b class="danger">tecNO_PERMISSION</b></span>
+          <span class="pillf">Bureau checks dimension integrity — auditors re-derive independently</span>
+          <span class="pillf">Kill-switch: <b>CredentialDelete</b> — single tx, immediate</span>
+        </div>
+      </div>
     </div>
-    <p class="sub" style="max-width:48em">Honest by construction: a new agent starts around TIER-2 on identity signals + a KYB operator's backing, then climbs as <span class="ink">real on-ledger payment history</span> accrues. No fabricated track record.</p>
+    <div class="arch-note">
+      Consensus enforces <span>credential existence + payment gate</span>.
+      The MeshCredit bureau enforces dimension integrity via independently-checkable evidence —
+      consensus does not validate the score.
+      Treasury = single signer today → multi-sig/HSM in production.
+    </div>
+    <div class="kick">Most primitives are Mainnet-ready. Credible path to production without new amendments.</div>
   </section>
 
-  <!-- 8 REAL AGENT -->
+  <!-- ── 6 DEMO ARC ── -->
   <section class="slide">
-    <div class="eyebrow">Real agent behaviour · not scripted</div>
-    <h2>The agent <span class="grad">reasons</span>, then the ledger <span class="grad">enforces.</span></h2>
-    <div class="quote">
-      <div class="q">"Payer is Helvetia (Switzerland), payee Lagos Precision Parts (Nigeria), amount 50 USD. Credential ceiling is $100, so within limit. No sanctions or fraud indicators apparent…"</div>
-      <div class="a">→ DECISION: PROCEED · deepseek-v4-pro · 2.7s</div>
+    <div class="eyebrow">Live demo · 6 real DeepSeek reasoning calls</div>
+    <h2>The agent reasons. The ledger <span class="grad">enforces.</span><br>Three denials that <span class="danger">bite.</span></h2>
+    <div class="demo-steps">
+      <div class="demo-step ok">
+        <span class="step-num">1</span>
+        <div class="step-body">
+          <div class="st">KYB Novartis → issue passport (6 dims, Bronze, low-conf)</div>
+          <div class="sd">DeepSeek call #1 — plan the payment strategy</div>
+        </div>
+      </div>
+      <div class="demo-step ok">
+        <span class="step-num">2</span>
+        <div class="step-body">
+          <div class="st">Fan-out EscrowFinish to 2 suppliers — both succeed</div>
+          <div class="sd">DeepSeek calls #2 &amp; #3 — per-payment assess; both PROCEED</div>
+        </div>
+      </div>
+      <div class="demo-step deny">
+        <span class="step-num">✗</span>
+        <div class="step-body">
+          <div class="st">Denial #1 — tier-ceiling exceeded</div>
+          <div class="sd">Payment above Bronze ceiling → blocked before chain</div>
+        </div>
+      </div>
+      <div class="demo-step deny">
+        <span class="step-num">✗</span>
+        <div class="step-body">
+          <div class="st">Denial #2 — delegation-cap exhausted</div>
+          <div class="sd">DeepSeek call #4 — denial reaction; principal budget spent</div>
+        </div>
+      </div>
+      <div class="demo-step deny">
+        <span class="step-num">✗</span>
+        <div class="step-body">
+          <div class="st">Denial #3 — AML-DENY on "Star Dragon Corporation Limited" (OFAC score 1.0)</div>
+          <div class="sd">DeepSeek call #5 — AML hold reasoning; real SDN match</div>
+        </div>
+      </div>
+      <div class="demo-step ok">
+        <span class="step-num">4</span>
+        <div class="step-body">
+          <div class="st">Uncertified agent → tecNO_PERMISSION at consensus (contrast)</div>
+          <div class="sd">Code-swap detection demo · Surgical kill-switch — certified agent keeps paying</div>
+        </div>
+      </div>
     </div>
-    <p class="sub">A real LLM call assesses AML / fraud risk and the credential ceiling — and its verdict actually gates the next on-chain step. A HOLD would refund the escrow instead.</p>
+    <div class="kick">DeepSeek call #6 — post-kill confirm reasoning. All calls real, not mocked.</div>
   </section>
 
-  <!-- 9 XRPL -->
+  <!-- ── 7 REAL TXS ── -->
   <section class="slide">
-    <div class="eyebrow">Technical · built only on live primitives</div>
-    <h2>The XRP Ledger does the heavy lifting.</h2>
-    <div class="pills">
-      <span class="pillf"><b>XLS-70</b> Credentials</span>
-      <span class="pillf"><b>DepositAuth</b> + DepositPreauth</span>
-      <span class="pillf"><b>XLS-80</b> Permissioned Domains</span>
-      <span class="pillf"><b>XLS-85</b> Token Escrow</span>
-      <span class="pillf"><b>DEX</b> cross-currency path payments</span>
-      <span class="pillf"><b>did:xrpl</b></span>
-    </div>
-    <p class="sub" style="max-width:46em">Nothing depends on an unshipped amendment. <span class="signal mono">asfAllowTrustLineLocking</span> is the single flag between us and a fully native-RLUSD escrow leg on mainnet.</p>
-  </section>
-
-  <!-- 10 RESULTS -->
-  <section class="slide">
-    <div class="eyebrow">Results · real on XRPL testnet</div>
-    <h2>Nothing mocked.</h2>
+    <div class="eyebrow">Results · XRPL testnet · 2026-06-21</div>
+    <h2>Real verified transactions.<br><span class="grad">Nothing mocked.</span></h2>
     <div class="txwrap">
       <div class="txl">
-        <a href="https://testnet.xrpl.org/transactions/E75A2C230BF93947EA4D4DFEC751672D5FB57C005DB38A4FD082D477F94F02EE" target="_blank" rel="noreferrer"><span class="k">CredentialCreate</span><span class="h">KYA passport ↗</span></a>
-        <a href="https://testnet.xrpl.org/transactions/43A205B871581F9863B7B5FD59047F7FB647A4A5DE7EBAFC14FB1230546CCDD1" target="_blank" rel="noreferrer"><span class="k">EscrowCreate</span><span class="h">held at bank ↗</span></a>
-        <a href="https://testnet.xrpl.org/transactions/2CEF0EE2ABFB9E464D8793D6090198F5B82F33C9AB7FCBFF49B3302A666B5641" target="_blank" rel="noreferrer"><span class="k">EscrowFinish</span><span class="h">released to Lagos ↗</span></a>
-        <a class="deny" href="https://testnet.xrpl.org/transactions/A516AC379C9DB956134F10C6839485ABA915F0912AED1AD91F86C933673F7D04" target="_blank" rel="noreferrer"><span class="k">tecNO_PERMISSION</span><span class="h">uncertified denied ↗</span></a>
-        <a class="deny" href="https://testnet.xrpl.org/transactions/8A720FF5F8F63035C8542C1EB8082436DF7C0ABCD3676268E1B1C0176E4FF189" target="_blank" rel="noreferrer"><span class="k">CredentialDelete</span><span class="h">kill-switch ↗</span></a>
+        <a href="https://testnet.xrpl.org/transactions/A2F2270BAEE41ADD6E4968A0192A2519875A078A7513CE6F9CF4667BEF02DCD9" target="_blank" rel="noreferrer">
+          <span class="k">CredentialCreate</span><span class="h">KYB OperatorCredential ↗</span>
+        </a>
+        <a href="https://testnet.xrpl.org/transactions/595F2FA864600A20F08ACCEDAC440CD35A34D0FB5048EA78D567B441385D0F9D" target="_blank" rel="noreferrer">
+          <span class="k">DepositPreauth</span><span class="h">Bank gate ↗</span>
+        </a>
+        <a href="https://testnet.xrpl.org/transactions/1521B5E868EEAEE2017F0AF76058EEA95B13FAEE0615C0115154B58E031798DC" target="_blank" rel="noreferrer">
+          <span class="k">CredentialCreate</span><span class="h">Agent passport ↗</span>
+        </a>
+        <a href="https://testnet.xrpl.org/transactions/C45EE2DE5EF2E082BE352C1B35CE6941721D2A850A7CB24C77C00A2256AD6318" target="_blank" rel="noreferrer">
+          <span class="k">EscrowFinish</span><span class="h">Settlement A ↗</span>
+        </a>
+        <a href="https://testnet.xrpl.org/transactions/0A816BF1FFA0AD2A389BCB2EA2A652108170EEE6F4658BC8D8F2F68753D93B56" target="_blank" rel="noreferrer">
+          <span class="k">EscrowFinish</span><span class="h">Settlement B ↗</span>
+        </a>
+        <a class="deny" href="https://testnet.xrpl.org/transactions/2AB0265CE38A212855482055B568EE083624D333EC48C16C2A2092E5F2A1A410" target="_blank" rel="noreferrer">
+          <span class="k">tecNO_PERMISSION</span><span class="h">Uncertified agent denied ↗</span>
+        </a>
+        <a class="deny" href="https://testnet.xrpl.org/transactions/6D53792D16699E74819DFC9D3B96C6B29A39686F323E261E8B136BF02E4DA9A1" target="_blank" rel="noreferrer">
+          <span class="k">CredentialDelete</span><span class="h">Kill-switch ↗</span>
+        </a>
+        <a href="https://testnet.xrpl.org/transactions/87CF6B950191B1262173CF131B01671C2963F34409E98D49FDA6413AAD1ECC36" target="_blank" rel="noreferrer">
+          <span class="k">EscrowFinish</span><span class="h">Post-kill certified agent pays ↗</span>
+        </a>
       </div>
-      <div class="shot"><img src="assets/demo-reasoning.png" alt="Live demo theater" /></div>
+      <div class="tx-note">
+        <b>8 verified testnet transactions</b> from a 2026-06-21 run.<br><br>
+        Every hash links to testnet.xrpl.org — independently verifiable by any judge or auditor, no trust in us required.<br><br>
+        <span class="faint">Team may refresh hashes after the final run.</span>
+      </div>
     </div>
+    <div class="kick">The kill-switch revokes the compromised agent only. The certified agent continues settling without interruption.</div>
   </section>
 
-  <!-- 11 BUSINESS -->
+  <!-- ── 8 BUSINESS MODEL ── -->
   <section class="slide">
-    <div class="eyebrow">Why it's infrastructure, not a payments app</div>
-    <h2>Capital-light. We issue the score;<br>the bank keeps the <span class="grad">decision.</span></h2>
-    <ul class="lst">
-      <li>Trust bureau<small>issue the portable on-ledger credential — the entry ticket to gated rails</small></li>
-      <li>Bureau read API<small>any bank / PSP reads standing at transaction time — per-verification revenue</small></li>
-      <li>Kill-switch / gate SLA<small>enterprise revocation: revoke once, denied everywhere; in-flight escrows refund</small></li>
-      <li>Skills economy → cross-stablecoin FX<small>the same rail attests agent skills; settlement follows the corridor</small></li>
-    </ul>
-    <div class="kick">Every honored credential compounds the credit graph — a moat a private database can't replicate.</div>
+    <div class="eyebrow">Business model · GTM · path to Mainnet (40% viability)</div>
+    <h2>Capital-light trust bureau.<br>We issue the score; the bank keeps <span class="grad">the decision.</span></h2>
+    <div class="biz-grid">
+      <div class="biz-card win">
+        <div class="bc-tag">Revenue stream 1</div>
+        <h3>Relying-party verification</h3>
+        <p>Banks, PSPs, DeFi venues pay per credential read at transaction time. Zero marginal cost per check; network value scales with agents onboarded.</p>
+      </div>
+      <div class="biz-card win">
+        <div class="bc-tag">Revenue stream 2</div>
+        <h3>Onboarding + renewal fees</h3>
+        <p>Operators pay to issue and renew agent passports. Kill-switch SLA (revoke once, denied everywhere) is an enterprise upsell.</p>
+      </div>
+      <div class="biz-card">
+        <div class="bc-tag">Moat layer 1 — data</div>
+        <h3>Behavioral consortium</h3>
+        <p>Negative-event sharing across relying parties. The graph grows with usage — a private database cannot replicate public XRPL auditability.</p>
+      </div>
+      <div class="biz-card">
+        <div class="bc-tag">Moat layer 2 — network</div>
+        <h3>Reputation portability</h3>
+        <p>The passport moves with the agent across rails and venues. Locking an agent into a single platform is not possible when the credential lives on a public ledger.</p>
+      </div>
+    </div>
+    <div class="gtm">
+      <div class="gtm-row"><span class="gl">Now</span><span class="gv">XRPL testnet → demo, validate with 2 pilot relying parties</span></div>
+      <div class="gtm-row"><span class="gl">Q3 2026</span><span class="gv">Mainnet credential issuance, multi-sig treasury, live Zefix API</span></div>
+      <div class="gtm-row"><span class="gl">Q1 2027</span><span class="gv">First paying enterprise operator; consortium fraud-sharing beta</span></div>
+    </div>
+    <div class="kick">Analogs: FICO / Experian (scoring) · Early Warning / Sardine (consortium fraud) · Chainalysis (on-chain intel).</div>
   </section>
 
-  <!-- 12 CLOSE -->
+  <!-- ── 9 HONESTY / ROADMAP ── -->
+  <section class="slide">
+    <div class="eyebrow">Honest assessment</div>
+    <h2>What's real today.<br><span class="signal">What ships next.</span></h2>
+    <div class="honest-grid">
+      <div class="honest-card now">
+        <div class="hc-tag">Real in this demo</div>
+        <ul>
+          <li>8 verified XRPL testnet transactions<small>links to testnet.xrpl.org, independently checkable</small></li>
+          <li>6 real DeepSeek LLM reasoning calls<small>gating real on-chain actions — not scripted</small></li>
+          <li>OFAC SDN screen on full 19,794-entry list<small>Star Dragon Corporation Limited: AML-DENY, score 1.0</small></li>
+          <li>Zefix registry data — real, cached<small>Novartis AG, CHE-103.867.266; live API needs credentials</small></li>
+          <li>World ID — staging / simulator<small>IDKit v4 integrated; orb verification needs a device</small></li>
+          <li>SHA-256 code-swap detection works<small>anyone can recompute the hash</small></li>
+        </ul>
+      </div>
+      <div class="honest-card later">
+        <div class="hc-tag">Production roadmap</div>
+        <ul>
+          <li>Zefix live API<small>replace cached fixture with credentialed real-time calls</small></li>
+          <li>World ID orb verification<small>replace simulator with physical device flow</small></li>
+          <li>Treasury → multi-sig / HSM<small>single signer today; production requires threshold signing</small></li>
+          <li>Thick-file agent history<small>demo uses seeded on-chain history; real history accrues over time</small></li>
+          <li>RLUSD fully native escrow leg<small>one flag: asfAllowTrustLineLocking (Mainnet-ready path exists)</small></li>
+          <li>Consortium negative-event sharing<small>requires ≥2 relying parties live</small></li>
+        </ul>
+      </div>
+    </div>
+    <div class="kick">We state limitations here, not in footnotes. The architecture holds regardless.</div>
+  </section>
+
+  <!-- ── 10 CLOSE / ASK ── -->
   <section class="slide">
     <div class="brand"><span class="dot"></span>MeshCredit</div>
-    <h2 style="margin-top:24px">Own the <span class="grad">trust layer</span><br>of the agent economy.</h2>
-    <div class="row">
-      <div class="stat"><div class="v credit">github.com/SunShineMesh/SunShine</div><div class="l">the code</div></div>
-      <div class="stat"><div class="v blue">sunshinemesh.github.io</div><div class="l">the explainer + live demo</div></div>
+    <h1 style="margin-top:20px">Own the <span class="grad">trust layer</span><br>of the agent economy.</h1>
+    <p class="sub">On-ledger KYA / KYB certificates, enforced at consensus on XRPL. The credit bureau for AI agents.</p>
+    <div class="ask-row">
+      <div class="ask-card">
+        <div class="ak">What we're asking</div>
+        <div class="av">Recognition + Ripple ecosystem introduction</div>
+        <div class="al">We are infrastructure, not a payments app. Help us find the first two enterprise relying parties.</div>
+      </div>
+      <div class="ask-card">
+        <div class="ak">Code</div>
+        <div class="av">github.com/SunShineMesh/SunShine</div>
+        <div class="al">All testnet scripts, credential issuance, demo arc — open source.</div>
+      </div>
+      <div class="ask-card">
+        <div class="ak">Live demo</div>
+        <div class="av">sunshinemesh.github.io</div>
+        <div class="al">Explainer site + video walkthrough of the full demo arc.</div>
+      </div>
     </div>
-    <div class="kick">MeshCredit · SwissHacks 2026 · Ripple — Know Your Agent</div>
+    <div class="kick">SwissHacks 2026 · Ripple · Know Your Agent · MeshCredit v2</div>
   </section>
 
 </div>
@@ -242,9 +655,17 @@
   const dots = document.getElementById('dots');
   const prog = document.getElementById('prog');
   const pageno = document.getElementById('pageno');
-  slides.forEach((_, i) => { const b = document.createElement('b'); b.onclick = () => slides[i].scrollIntoView(); dots.appendChild(b); });
+
+  slides.forEach((_, i) => {
+    const b = document.createElement('b');
+    b.setAttribute('aria-label', 'Go to slide ' + (i + 1));
+    b.onclick = () => slides[i].scrollIntoView();
+    dots.appendChild(b);
+  });
+
   const dotEls = [...dots.children];
   let cur = 0;
+
   function update() {
     const i = Math.round(deck.scrollTop / window.innerHeight);
     cur = Math.max(0, Math.min(slides.length - 1, i));
@@ -252,14 +673,21 @@
     prog.style.width = ((cur + 1) / slides.length * 100) + '%';
     pageno.textContent = String(cur + 1).padStart(2, '0') + ' / ' + String(slides.length).padStart(2, '0');
   }
+
   deck.addEventListener('scroll', update, { passive: true });
-  function go(d) { const n = Math.max(0, Math.min(slides.length - 1, cur + d)); slides[n].scrollIntoView(); }
+
+  function go(d) {
+    const n = Math.max(0, Math.min(slides.length - 1, cur + d));
+    slides[n].scrollIntoView();
+  }
+
   addEventListener('keydown', (e) => {
     if (['ArrowRight', 'ArrowDown', ' ', 'PageDown'].includes(e.key)) { e.preventDefault(); go(1); }
     if (['ArrowLeft', 'ArrowUp', 'PageUp'].includes(e.key)) { e.preventDefault(); go(-1); }
     if (e.key === 'Home') slides[0].scrollIntoView();
     if (e.key === 'End') slides[slides.length - 1].scrollIntoView();
   });
+
   update();
 </script>
 </body>
